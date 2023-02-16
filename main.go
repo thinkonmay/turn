@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strconv"
 	"syscall"
+	"time"
 
 	"github.com/pion/stun"
 	"github.com/pion/turn/v2"
@@ -47,11 +48,6 @@ func (s *stunLogger) ReadFrom(p []byte) (n int, addr net.Addr, err error) {
 }
 
 
-const (
-	realm = "thinkmay.net"
-	users = "user=pass"
-	port  = 3478
-)
 
 
 func GetPublicIP() (string,error) {
@@ -83,12 +79,41 @@ func GetPublicIP() (string,error) {
 }
 
 func main() {
-	publicIP,err := GetPublicIP()
+	user := ""
+	password := ""
+	realm := "huyhoangdo0205@gmail.com"
+	port := 0
 
+	args := os.Args[1:]
+	for i, arg := range args {
+		if arg == "--port" {
+			port,_ = strconv.Atoi(args[i+1]);
+		} else if arg == "--user" {
+			user = args[i+1]
+		} else if arg == "--password" {
+			password = args[i+1]
+		}
+	}
+
+	if user == "" || password == "" {
+		fmt.Println("missing user and password")
+		os.Exit(1);
+	}
+
+
+	publicIP,err := GetPublicIP()
 	if err != nil {
 		fmt.Printf("%s\n",err.Error())
 		log.Fatalf("'public-ip' is required")
 	} 
+
+	fmt.Printf("starting turn server with public IP %s:%d",publicIP,port)
+	go func() {
+		for {
+			time.Sleep(1 * time.Second)
+			fmt.Println("turn server still alive")
+		}
+	}()
 
 	// Create a UDP listener to pass into pion/turn
 	// pion/turn itself doesn't allocate any UDP sockets, but lets the user pass them in
@@ -101,7 +126,7 @@ func main() {
 	// Cache -users flag for easy lookup later
 	// If passwords are stored they should be saved to your DB hashed using turn.GenerateAuthKey
 	usersMap := map[string][]byte{}
-	for _, kv := range regexp.MustCompile(`(\w+)=(\w+)`).FindAllStringSubmatch(users, -1) {
+	for _, kv := range regexp.MustCompile(`(\w+)=(\w+)`).FindAllStringSubmatch(fmt.Sprintf("%s=%s",user,password), -1) {
 		usersMap[kv[1]] = turn.GenerateAuthKey(kv[1], realm, kv[2])
 	}
 

@@ -1,19 +1,20 @@
 {
   "name": "edge-turn",
-  "version": "0.0.1",
+  "version": "0.0.11",
   "lockfileVersion": 2,
   "requires": true,
   "author": "huyhoangdo0205@gmail.com",
   "description": "",
   "license": "ISC",
-  "main": "index.js",
+  "main": "dist/index.js",
   "packages": {},
   "devDependencies": {
-    "child_process": "^1.0.2",
-    "@types/node": "^18.13.0"
+    "@types/node": "^18.13.0",
+    "child_process": "^1.0.2"
   },
   "scripts": {
-    "deploy": "tsc --module commonjs && go build . && robocopy ./ ./dist edge-turn.exe && npm publish"
+    "build": "tsc --module commonjs",
+    "build-turn": "go build  -o ./dist/edge-turn ."
   },
   "dependencies": {
     "child_process": "^1.0.2"
