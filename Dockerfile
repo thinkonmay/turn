@@ -1,5 +1,0 @@
-FROM go:19.2
-COPY . .
-
-EXPOSE 3478
-RUN go run .

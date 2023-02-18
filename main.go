@@ -82,7 +82,7 @@ func main() {
 	user := ""
 	password := ""
 	realm := "huyhoangdo0205@gmail.com"
-	port := 0
+	port := 3478
 
 	args := os.Args[1:]
 	for i, arg := range args {
@@ -107,11 +107,11 @@ func main() {
 		log.Fatalf("'public-ip' is required")
 	} 
 
-	fmt.Printf("starting turn server with public IP %s:%d",publicIP,port)
+	fmt.Printf("starting turn server with public IP %s:%d\n",publicIP,port)
 	go func() {
 		for {
 			time.Sleep(1 * time.Second)
-			fmt.Println("turn server still alive")
+			fmt.Println("ping")
 		}
 	}()
 
