@@ -1,5 +1,5 @@
 // Package main implements a TURN client using UDP
-package main
+package turn 
 
 import (
 	"flag"
