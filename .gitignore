@@ -2,3 +2,4 @@ dist/
 *.exe
 node_modules/
 *.tsbuildinfo
+secret/
