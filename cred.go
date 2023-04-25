@@ -31,6 +31,7 @@ type Account struct {
 type Address struct {
 	PublicIP  string `json:"public_ip"`
 	PrivateIP string `json:"private_ip"`
+	Port      int    `json:"turn_port"`
 }
 
 type Secret struct {
@@ -66,6 +67,7 @@ var proj string = os.Getenv("PROJECT")
 var Addresses *Address = &Address{
 	PublicIP:  GetPublicIPCurl(),
 	PrivateIP: GetPrivateIP(),
+	Port: GetFreePort(),
 }
 
 func init() {
@@ -158,7 +160,7 @@ func SetupTurnAccount(proxy Account) (
 	err error) {
 
 	b, _ := json.Marshal(Addresses)
-	req, err := http.NewRequest("POST", Secrets.EdgeFunctions.WorkerRegister, bytes.NewBuffer(b))
+	req, err := http.NewRequest("POST", Secrets.EdgeFunctions.TurnRegister, bytes.NewBuffer(b))
 	if err != nil {
 		return Account{},TurnCred{}, err
 	}
@@ -216,18 +218,18 @@ func GetPrivateIP() string {
 	return localAddr.IP.String()
 }
 
-func GetFreePort() (int, error) {
+func GetFreePort() (int) {
 	addr, err := net.ResolveTCPAddr("tcp", "localhost:0")
 	if err != nil {
-		return 0, err
+		panic(err)
 	}
 
 	l, err := net.ListenTCP("tcp", addr)
 	if err != nil {
-		return 0, err
+		panic(err)
 	}
 	defer l.Close()
-	return l.Addr().(*net.TCPAddr).Port, nil
+	return l.Addr().(*net.TCPAddr).Port
 }
 
 
