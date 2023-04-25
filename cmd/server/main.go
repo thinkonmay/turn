@@ -21,9 +21,9 @@ const (
 )
 
 func main() {
+	port     := edgeturn.Addresses.Port
+	publicIP := edgeturn.Addresses.PublicIP
 
-	port, err := edgeturn.GetFreePort()
-	publicIP := edgeturn.GetPublicIPCurl()
 	proxy_cred, err := edgeturn.UseProxyAccount()
 	if err != nil {
 		fmt.Printf("failed to find proxy account: %s", err.Error())
@@ -33,7 +33,7 @@ func main() {
 	fmt.Println("proxy account found, continue")
 	worker_cred,turn_cred, err := edgeturn.SetupTurnAccount(proxy_cred)
 	go func() {
-		agent := edgeturn.NewSupabaseAgent("","")
+		agent := edgeturn.NewSupabaseAgent(edgeturn.Secrets.Secret.Url,edgeturn.Secrets.Secret.Anon)
 		uid,err := agent.SignIn(worker_cred.Username,worker_cred.Password)
 		if err != nil {
 			panic(err)
