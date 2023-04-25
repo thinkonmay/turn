@@ -1,7 +1,13 @@
 package edgeturn
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+
 	"github.com/nedpals/supabase-go"
 )
 
@@ -40,11 +46,23 @@ func (agent *SupabaseAgent)	SignIn(username string,
 
 
 func (agent *SupabaseAgent)	Ping( uid string)( err error)  {
-	sb := supabase.CreateClient(agent.url,agent.anon_key);
-	_,err = sb.DB.Rpc("ping_account",struct {
+	body,_ := json.Marshal( struct {
 		AccountID string `json:"account_uid"`
 	}{
 		AccountID: uid,
 	})
+
+	req,err := http.NewRequest("POST",fmt.Sprintf("%s/rest/v1/rpc/ping_account",agent.url),bytes.NewBuffer(body))
+	if err != nil {
+		return err
+	}
+	resp,err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	} else if resp.StatusCode != 200 {
+		data,_ := io.ReadAll(resp.Body)
+		return fmt.Errorf(string(data))
+	}
+
 	return
 }
