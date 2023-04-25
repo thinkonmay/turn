@@ -56,6 +56,12 @@ func (agent *SupabaseAgent)	Ping( uid string)( err error)  {
 	if err != nil {
 		return err
 	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept-Profile", "public")
+	req.Header.Set("Content-Profile", "public")
+	req.Header.Set("Authorization", "Bearer "+agent.anon_key)
+	req.Header.Set("apikey", agent.anon_key)
 	resp,err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
