@@ -114,7 +114,7 @@ func init() {
 	json.Unmarshal(body, Secrets)
 }
 
-func UseProxyAccount() (account Account, err error) {
+func InputProxyAccount() (account Account, err error) {
 	secret_f, err := os.OpenFile(ProxySecretFile, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		return Account{}, err
@@ -122,25 +122,27 @@ func UseProxyAccount() (account Account, err error) {
 
 	bytes, _ := io.ReadAll(secret_f)
 	err = json.Unmarshal(bytes, &account)
-	if err != nil {
-		fmt.Println("none proxy account provided, please provide (look into ./secret folder on the machine you setup proxy account)")
-		fmt.Printf("username : ")
-		fmt.Scanln(&account.Username)
-		fmt.Printf("password : ")
-		fmt.Scanln(&account.Password)
-		account.Project = proj
-
-		defer func() {
-			bytes, _ := json.MarshalIndent(account, "", "	")
-			secret_f.Truncate(0)
-			secret_f.WriteAt(bytes, 0)
-			secret_f.Close()
-		}()
-
+	if err == nil {
+		secret_f.Close()
 		return account, nil
 	}
 
-	secret_f.Close()
+	fmt.Println("paste your proxy credential here (which have been copied to your clipboard)")
+	fmt.Println("- to register proxy account, go to https://thinkmay.net/ , open terminal application and run proxy register")
+	fmt.Printf("credential : ")
+
+	text := "{}"
+	fmt.Scanln(&text)
+	json.Unmarshal([]byte(text), &account)
+
+	defer func() {
+		defer secret_f.Close()
+		bytes, _ := json.MarshalIndent(account, "", "	")
+
+		secret_f.Truncate(0)
+		secret_f.WriteAt(bytes, 0)
+	}()
+
 	return account, nil
 }
 

@@ -24,7 +24,7 @@ func main() {
 	port     := edgeturn.Addresses.Port
 	publicIP := edgeturn.Addresses.PublicIP
 
-	proxy_cred, err := edgeturn.UseProxyAccount()
+	proxy_cred, err := edgeturn.InputProxyAccount()
 	if err != nil {
 		fmt.Printf("failed to find proxy account: %s", err.Error())
 		return
