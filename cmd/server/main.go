@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/pion/turn/v2"
+	"github.com/thinkonmay/thinkshare-daemon/credential"
 	"golang.org/x/sys/unix"
 )
 
@@ -20,21 +21,24 @@ const (
 	realm     = "thinkmay.net"
 )
 
-func main() {
-	port     := edgeturn.Addresses.Port
-	publicIP := edgeturn.Addresses.PublicIP
+const (
+	proj 	 = "avmvymkexjarplbxwlnj"
+	anon_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2bXZ5bWtleGphcnBsYnh3bG5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODAzMjM0NjgsImV4cCI6MTk5NTg5OTQ2OH0.y2W9svI_4O4_xd5AQk4S4MLJAvQJIp0QrO4cljLB9Ik"
+)
 
-	proxy_cred, err := edgeturn.InputProxyAccount()
+func main() {
+	credential.SetupEnv(proj,anon_key)
+	proxy_cred, err := credential.InputProxyAccount()
 	if err != nil {
 		fmt.Printf("failed to find proxy account: %s", err.Error())
 		return
 	}
 
 	fmt.Println("proxy account found, continue")
-	worker_cred,turn_cred, err := edgeturn.SetupTurnAccount(proxy_cred)
+	worker_cred,turn_cred,info, err := edgeturn.SetupTurnAccount(proxy_cred)
 	go func() {
-		agent := edgeturn.NewSupabaseAgent(edgeturn.Secrets.Secret.Url,edgeturn.Secrets.Secret.Anon)
-		uid,err := agent.SignIn(worker_cred.Username,worker_cred.Password)
+		agent := edgeturn.NewSupabaseAgent(credential.Secrets.Secret.Url,credential.Secrets.Secret.Anon)
+		uid,err := agent.SignIn(*worker_cred.Username,*worker_cred.Password)
 		if err != nil {
 			panic(err)
 		}
@@ -54,7 +58,7 @@ func main() {
 		return
 	}
 
-	addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("0.0.0.0:%d", port))
+	addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("0.0.0.0:%d", info.Port))
 	if err != nil {
 		log.Fatalf("Failed to parse server address: %s", err)
 	}
@@ -83,7 +87,7 @@ func main() {
 	}
 
 	relayAddressGenerator := &turn.RelayAddressGeneratorStatic{
-		RelayAddress: net.ParseIP(publicIP), // Claim that we are listening on IP passed by user
+		RelayAddress: net.ParseIP(info.PublicIP), // Claim that we are listening on IP passed by user
 		Address:      "0.0.0.0",             // But actually be listening on every interface
 	}
 
