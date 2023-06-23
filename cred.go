@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 
 	"github.com/thinkonmay/thinkshare-daemon/credential"
-	"github.com/thinkonmay/thinkshare-daemon/utils/port"
 )
 
 type TurnCred struct {
@@ -26,12 +26,32 @@ type TurnInfo struct {
 	Port      int    `json:"turn_port"`
 }
 
+func GetFreeUDPPort() (int, error) {
+	addr, err := net.ResolveUDPAddr("udp", "localhost:0")
+	if err != nil {
+		return 0, err
+	}
+
+	l, err := net.ListenUDP("udp", addr)
+	if err != nil {
+		return 0, err
+	}
+	defer l.Close()
+	port := l.LocalAddr().(*net.UDPAddr).Port
+	min,max := 49152,65535
+	if port > max {
+		return 0,fmt.Errorf("invalid port %d",port)
+	} else if port < min {
+		return GetFreeUDPPort()
+	}
+	return port, nil
+}
 func SetupTurnAccount(proxy credential.Account) (
 					 cred credential.Account,
 					 turn TurnCred,
 					 info TurnInfo,
 					 err error) {
-	port,_ := port.GetFreePort()
+	port,_ := GetFreeUDPPort()
 	info = TurnInfo{
 		PublicIP: credential.Addresses.PublicIP,
 		PrivateIP: credential.Addresses.PrivateIP,

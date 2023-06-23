@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2023 The Pion community <https://pion.ly>
+# SPDX-License-Identifier: MIT
+
+version: "3.1"
+
+services:
+  turn:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "49152-65535:49152-65535"

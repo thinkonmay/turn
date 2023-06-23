@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/pion/turn/v2 v2.0.9
-	github.com/thinkonmay/thinkshare-daemon v0.0.0-20230611135631-47ffbb416f7e
+	github.com/thinkonmay/thinkshare-daemon v0.0.0-20230623165044-d6a53e305149
 )
 
 require (
