@@ -1,12 +1,19 @@
+go build -o turn cmd/server/main.go
 systemctl stop edge-turn.service
 echo "[Unit]
 Description=
 After=network.target
 
+StartLimitIntervalSec=500
+StartLimitBurst=5
+
 [Service]
 Type=simple
-ExecStart=/snap/bin/go run cmd/server/main.go
+ExecStart=/home/edge-turn/turn
 WorkingDirectory=/home/edge-turn
+
+Restart=always
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target" > /lib/systemd/system/edge-turn.service

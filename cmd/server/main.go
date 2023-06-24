@@ -34,7 +34,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("proxy account found, continue")
+	fmt.Printf("proxy account found %d, continue\n",proxy_cred)
 	worker_cred,turn_cred,info, err := edgeturn.SetupTurnAccount(proxy_cred)
 	go func() {
 		agent := edgeturn.NewSupabaseAgent(credential.Secrets.Secret.Url,credential.Secrets.Secret.Anon)
