@@ -1,5 +1,5 @@
 go build -o turn cmd/server/main.go
-systemctl stop edge-turn.service
+systemctl stop edge-turn-huyhoangdo.service
 echo "[Unit]
 Description=
 After=network.target
@@ -9,15 +9,15 @@ StartLimitBurst=5
 
 [Service]
 Type=simple
-ExecStart=/home/edge-turn/turn
-WorkingDirectory=/home/edge-turn
+ExecStart=/home/ubuntu/edge-turn-huyhoangdo/turn
+WorkingDirectory=/home/ubuntu/edge-turn-huyhoangdo
 
 Restart=always
 RestartSec=5s
 
 [Install]
-WantedBy=multi-user.target" > /lib/systemd/system/edge-turn.service
+WantedBy=multi-user.target" > /lib/systemd/system/edge-turn-huyhoangdo.service
 
-systemctl enable edge-turn.service
-systemctl start  edge-turn.service
-systemctl status edge-turn.service
+systemctl enable edge-turn-huyhoangdo.service
+systemctl start  edge-turn-huyhoangdo.service
+systemctl status edge-turn-huyhoangdo.service
