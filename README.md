@@ -16,3 +16,4 @@
 ---
 Notice
 - Your server deploy turn need to open port from  49152 to 65535
+- We had set up a monitor system for turn, it will notify in logging system (Discord) if all turn server shutdown
