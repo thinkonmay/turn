@@ -1,17 +1,21 @@
 # Turn Server
 
-1. create `secret/proxy.json` file with proxy account: 
+1. Create `secret/proxy.json` file with proxy account: 
 ```
     {"username":"your_proxy_email","password":"your_proxy_pwd"}
 ```
-2. open `service.sh`, change path of `ExecStart`, `WorkingDirectory` to current directory
+2. Open `service.sh`, change path of `ExecStart`, `WorkingDirectory` to current directory
 ```
     ExecStart           = /home/my_linux/turn/turn
     WorkingDirectory    = /home/my_linux/turn
 ```
-3. deploy turn server
+3. Deploy turn server
 ```
     $ sudo sh service.sh
+```
+4. Check status turn server:
+```
+    $ sudo systemctl status edge-turn.service
 ```
 ---
 Notice
