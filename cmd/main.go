@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"edgeturn"
-	"errors"
 	"fmt"
 	"log"
 	"net"
