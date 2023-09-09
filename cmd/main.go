@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"edgeturn"
+	"errors"
 	"fmt"
 	"log"
 	"net"
@@ -21,17 +22,36 @@ const (
 	realm     = "thinkmay.net"
 )
 
-const (
+var (
 	proj 	 = "https://supabase.thinkmay.net"
 	anon_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogImFub24iLAogICJpc3MiOiAic3VwYWJhc2UiLAogICJpYXQiOiAxNjk0MDE5NjAwLAogICJleHAiOiAxODUxODcyNDAwCn0.EpUhNso-BMFvAJLjYbomIddyFfN--u-zCf0Swj9Ac6E"
 )
+func init() {
+	project := os.Getenv("TM_PROJECT")
+	key     := os.Getenv("TM_ANONKEY")
+	if project != "" {
+		proj = project
+	}
+	if key != "" {
+		anon_key = key
+	}
+}
 
 func main() {
 	credential.SetupEnv(proj,anon_key)
 	proxy_cred, err := credential.InputProxyAccount()
 	if err != nil {
 		fmt.Printf("failed to find proxy account: %s", err.Error())
-		return
+		Username := os.Getenv("PROXY_USERNAME")
+		Password := os.Getenv("PROXY_PASSWORD")
+		if Username == "" && Password == "" {
+			panic(fmt.Errorf("no proxy account found"))
+		}
+
+		proxy_cred = credential.Account{
+			Username: &Username,
+			Password: &Password,
+		}
 	}
 
 	fmt.Printf("proxy account found %d, continue\n",proxy_cred)
