@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/pion/turn/v2 v2.0.9
-	github.com/thinkonmay/thinkshare-daemon v0.0.0-20230623165044-d6a53e305149
+	github.com/thinkonmay/thinkshare-daemon v0.0.0-20230908070801-e36911ed04f7
 )
 
 require (
@@ -13,7 +13,6 @@ require (
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/jaypipes/ghw v0.9.0 // indirect
 	github.com/jaypipes/pcidb v1.0.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
@@ -34,7 +33,7 @@ require (
 
 require (
 	github.com/nedpals/supabase-go v0.2.0
-	github.com/pion/logging v0.2.2
+	github.com/pion/logging v0.2.2 // indirect
 	github.com/pion/randutil v0.1.0 // indirect
 	github.com/pion/stun v0.4.0 // indirect
 	github.com/pion/transport v0.13.1 // indirect
