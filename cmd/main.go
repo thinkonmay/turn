@@ -39,8 +39,7 @@ func init() {
 func main() {
 	credential.SetupEnv(proj,anon_key)
 	proxy_cred, err := credential.InputProxyAccount()
-	if err != nil {
-		fmt.Printf("failed to find proxy account: %s", err.Error())
+	if proxy_cred.Username == nil && proxy_cred.Password == nil {
 		Username := os.Getenv("PROXY_USERNAME")
 		Password := os.Getenv("PROXY_PASSWORD")
 		if Username == "" && Password == "" {
