@@ -15,6 +15,9 @@ import (
 const (
 	threadNum = 4
 	realm     = "thinkmay.net"
+
+	min = 60000
+	max = 65535
 )
 
 var (
@@ -49,7 +52,7 @@ func main() {
 	}
 
 	fmt.Printf("proxy account found %d, continue\n",proxy_cred)
-	worker_cred,turn_cred,info, err := edgeturn.SetupTurnAccount(proxy_cred)
+	worker_cred,turn_cred,info, err := edgeturn.SetupTurnAccount(proxy_cred,min,max)
 	go func() {
 		agent := edgeturn.NewSupabaseAgent(credential.Secrets.Secret.Url,credential.Secrets.Secret.Anon)
 		uid,err := agent.SignIn(*worker_cred.Username,*worker_cred.Password)
@@ -72,7 +75,7 @@ func main() {
 		return
 	}
 
-	s,err := edgeturn.SetupTurn(info.PublicIP,username,password, info.Port,65535,60000)
+	s,err := edgeturn.SetupTurn(info.PublicIP,username,password, info.Port,min,max)
 	if err != nil {
 		panic(err)
 	}
