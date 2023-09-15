@@ -26,7 +26,7 @@ type TurnInfo struct {
 	Port      int    `json:"turn_port"`
 }
 
-func GetFreeUDPPort() (int, error) {
+func GetFreeUDPPort(min int,max int) (int, error) {
 	addr, err := net.ResolveUDPAddr("udp", "localhost:0")
 	if err != nil {
 		return 0, err
@@ -38,20 +38,21 @@ func GetFreeUDPPort() (int, error) {
 	}
 	defer l.Close()
 	port := l.LocalAddr().(*net.UDPAddr).Port
-	min,max := 49152,65535
 	if port > max {
 		return 0,fmt.Errorf("invalid port %d",port)
 	} else if port < min {
-		return GetFreeUDPPort()
+		return GetFreeUDPPort(min,max)
 	}
 	return port, nil
 }
-func SetupTurnAccount(proxy credential.Account) (
+func SetupTurnAccount(proxy credential.Account,
+					 min int, 
+					 max int) (
 					 cred credential.Account,
 					 turn TurnCred,
 					 info TurnInfo,
 					 err error) {
-	port,_ := GetFreeUDPPort()
+	port,_ := GetFreeUDPPort(min,max)
 	info = TurnInfo{
 		PublicIP: credential.Addresses.PublicIP,
 		PrivateIP: credential.Addresses.PrivateIP,
