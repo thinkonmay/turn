@@ -9,8 +9,8 @@ StartLimitBurst=5
 
 [Service]
 Type=simple
-ExecStart=/home/ubuntu/edge-turn/turn
-WorkingDirectory=/home/ubuntu/edge-turn
+ExecStart=/home/huyhoang/turn/turn
+WorkingDirectory=/home/huyhoang/turn
 
 Restart=always
 RestartSec=5s

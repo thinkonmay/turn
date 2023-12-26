@@ -3,9 +3,9 @@ module edgeturn
 go 1.18
 
 require (
-	github.com/nedpals/supabase-go v0.3.0
+	github.com/pion/stun/v2 v2.0.0
 	github.com/pion/turn/v3 v3.0.1
-	github.com/thinkonmay/thinkshare-daemon v0.0.0-20230908070801-e36911ed04f7
+	github.com/thinkonmay/thinkshare-daemon v0.0.0-20231215065000-b157951ca993
 )
 
 require (
@@ -13,16 +13,13 @@ require (
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/jaypipes/ghw v0.9.0 // indirect
 	github.com/jaypipes/pcidb v1.0.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
-	github.com/nedpals/postgrest-go v0.1.3 // indirect
 	github.com/pion/dtls/v2 v2.2.7 // indirect
 	github.com/pion/logging v0.2.2 // indirect
 	github.com/pion/randutil v0.1.0 // indirect
 	github.com/pion/stun v0.4.0 // indirect
-	github.com/pion/stun/v2 v2.0.0 // indirect
 	github.com/pion/transport/v2 v2.2.1 // indirect
 	github.com/pion/transport/v3 v3.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

@@ -36,7 +36,6 @@ func init() {
 }
 
 func main() {
-	credential.SetupEnv(proj,anon_key)
 	proxy_cred, err := credential.InputProxyAccount()
 	if proxy_cred.Username == nil && proxy_cred.Password == nil {
 		Username := os.Getenv("PROXY_USERNAME")
@@ -51,14 +50,12 @@ func main() {
 		}
 	}
 
-	fmt.Printf("proxy account found %d, continue\n",proxy_cred)
-	worker_cred,turn_cred,info, err := edgeturn.SetupTurnAccount(proxy_cred,min,max)
+	fmt.Printf("proxy account found %s, continue\n",*proxy_cred.Password)
+	uid,turn_cred,info, err := credential.SetupTurnAccount(proxy_cred,min,max)
 	go func() {
-		agent := edgeturn.NewSupabaseAgent(credential.Secrets.Secret.Url,credential.Secrets.Secret.Anon)
-		uid,err := agent.SignIn(*worker_cred.Username,*worker_cred.Password)
-		if err != nil {
-			panic(err)
-		}
+		agent := edgeturn.NewSupabaseAgent(
+			fmt.Sprintf("https://%s/",credential.PROJECT), 
+			credential.ANON_KEY)
 		for {
 			err := agent.Ping(uid)
 			if err != nil {
